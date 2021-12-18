@@ -45,7 +45,7 @@ const SurveyScreen = ({navigation}) => {
             useNativeDriver: false
         }).start();
     }
-    const restartQuiz = () => {
+    const restartSurvey = () => {
         setShowScoreModal(false);
 
         setCurrentQuestionIndex(0);
@@ -140,7 +140,7 @@ const SurveyScreen = ({navigation}) => {
                 <TouchableOpacity
                     onPress={handleNext}
                     style={{
-                        marginTop: 20, width: '100%', backgroundColor: COLORS.accent, padding: 20, borderRadius: 5
+                        marginTop: 20, width: '100%', backgroundColor: COLORS.accent, padding: 20, borderRadius: 20
                     }}>
                     <Text style={{ fontSize: 20, color: COLORS.white, textAlign: 'center' }}>Next</Text>
                 </TouchableOpacity>
@@ -224,32 +224,19 @@ const SurveyScreen = ({navigation}) => {
                             padding: 20,
                             alignItems: 'center'
                         }}>
-                            <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{score > (allQuestions.length / 2) ? 'Congratulations!' : 'Oops!'}</Text>
+                            <Text style={{ fontSize: 30, fontWeight: 'bold', color: COLORS.success, textAlign: 'center', marginBottom: 30}}>Thank you for your Time!!</Text>
 
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'flex-start',
-                                alignItems: 'center',
-                                marginVertical: 20
-                            }}>
-                                <Text style={{
-                                    fontSize: 30,
-                                    color: score > (allQuestions.length / 2) ? COLORS.success : COLORS.error
-                                }}>{score}</Text>
-                                <Text style={{
-                                    fontSize: 20, color: COLORS.black
-                                }}>/ {allQuestions.length}</Text>
-                            </View>
-                            {/* Retry Quiz button */}
+
+                            {/* Restart Suvey*/}
                             <TouchableOpacity
-                                onPress={restartQuiz}
+                                onPress={restartSurvey}
                                 style={{
                                     backgroundColor: COLORS.accent,
                                     padding: 20, width: '100%', borderRadius: 20
                                 }}>
                                 <Text style={{
-                                    textAlign: 'center', color: COLORS.white, fontSize: 20
-                                }}>Retry Quiz</Text>
+                                    textAlign: 'center', color: COLORS.white, fontSize: 20, fontWeight: 'bold'
+                                }}>Submit Survey</Text>
                             </TouchableOpacity>
 
                         </View>
