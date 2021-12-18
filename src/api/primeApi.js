@@ -21,7 +21,7 @@ export default questionnaire = [
     },
     {
         question: 'What is the only flying mammal?',
-        option: ['The bat', 'The flying squirrel', 'the bald eagle', 'The bat'],
+        option: ['The bat', 'The flying squirrel', 'the bald eagle'],
         correct_option: 'The bat'
-    },
+    }
 ]
