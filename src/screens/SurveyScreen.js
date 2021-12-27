@@ -13,6 +13,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constant/theme";
 import questionnaire from "../api/primeApi";
+import { ScrollView } from "react-native-gesture-handler";
 
 const SurveyScreen = ({ navigation }) => {
   const allQuestions = questionnaire;
@@ -115,7 +116,7 @@ const SurveyScreen = ({ navigation }) => {
   };
   const renderOptions = () => {
     return (
-      <View>
+      <ScrollView>
         {allQuestions[currentQuestionIndex]?.option.map((option) => (
           <TouchableOpacity
             onPress={() => validateAnswer(option)}
@@ -140,7 +141,7 @@ const SurveyScreen = ({ navigation }) => {
               marginVertical: 10,
             }}
           >
-            <Text style={{ fontSize: 20, color: COLORS.white }}>{option}</Text>
+            <Text style={{ fontSize: 20, color: COLORS.white}}>{option}</Text>
 
             {option == currentOptionSelected ? (
               <View
@@ -164,7 +165,7 @@ const SurveyScreen = ({ navigation }) => {
             ) : null}
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
     );
   };
 

@@ -1,27 +1,27 @@
 export default questionnaire = [
   {
-    question: "What is the bigesst planeet in our solar system",
-    option: ["Jupitar", "Saturn", "Nepture", "Mercury"],
-    correct_option: "Jupitar",
+    question: "Why should I buy insurance from Prime?",
+    option: ["because it a priority at all stages of your life,", "Prime Insurance can help you to create the legacy", "you want to leave for your family and colleagues"],
+    correct_option: "Prime Insurance can help you to create the legacy",
   },
   {
-    question: "what attraction in india is one of the damus in the world",
-    option: ["Chand Minar", "Taj Mahal", "Stadium"],
-    correct_option: "Taj Mahal",
+    question: "What insurance products does Prime provide?",
+    option: ["motor insurance", "Property insurance", "Travel insurance", "Marine insurance", "Accident cover", "Money insurance", "Contractors’ all risk insurance", "Liability insurance"],
+    correct_option: "Liability insurance",
   },
   {
-    question: "What land animal can open its mouth the widest? ",
-    option: ["Alligator", "Crocodile", "Baboon", "Hippo"],
-    correct_option: "Hippo",
+    question: "How do I buy Prime insurance products?",
+    option: ["Via branches", "to contact our toll-free number", "to speak to a knowledgeable service"],
+    correct_option: "contact our toll-free number",
   },
   {
-    question: "What is the largest animal on Earth?",
-    option: ["The African elemephant", "The blue whale", "Nepture", "Mercury"],
-    correct_option: "The blue whale",
+    question: "What does Prime motor insurance cover?",
+    option: ["Platinum", "Passenger", "Nepture"],
+    correct_option: "Nepture",
   },
   {
-    question: "What is the only flying mammal?",
-    option: ["The bat", "The flying squirrel", "the bald eagle"],
-    correct_option: "The bat",
+    question: "how do you like to contact us if you have query about Prime insurance?",
+    option: ["1320", " callcenter@prime.rw.", "our branches across Rwanda"],
+    correct_option: "1320",
   },
 ];
