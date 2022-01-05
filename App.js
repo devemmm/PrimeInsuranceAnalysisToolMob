@@ -2,7 +2,9 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import SurveyScreen from "./src/screens/SurveyScreen";
-import Identification from "./src/screens/Identification";
+import SurveyScreenn from "./src/screens/SurveyScreenn";
+import IdentificationScreen from "./src/screens/IdentificationScreen";
+import WelcomeScreen from "./src/screens/WelcomeScreen";
 
 const stack = createStackNavigator();
 
@@ -11,8 +13,22 @@ const App = () => {
     <NavigationContainer>
       <stack.Navigator initialRouteName="Identification">
         <stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <stack.Screen
+          name="Surveyy"
+          component={SurveyScreenn}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <stack.Screen
           name="Identififation"
-          component={Identification}
+          component={IdentificationScreen}
           options={{
             headerShown: false,
           }}
