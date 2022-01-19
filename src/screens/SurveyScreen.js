@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -10,13 +10,12 @@ import {
   Modal,
   Animated,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constant/theme";
-import questionnaire from "../api/primeApi";
 import { ScrollView } from "react-native-gesture-handler";
+import { Context as AuthContext } from "../context/AppContext";
 
-const SurveyScreen = ({ navigation }) => {
-  const allQuestions = questionnaire;
+const SurveyScreenn = ({ navigation }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentOptionSelected, setCurrentOptionSelected] = useState(null);
   const [correctOption, setCorrectOption] = useState(null);
@@ -25,6 +24,12 @@ const SurveyScreen = ({ navigation }) => {
   const [showNextButton, setShowNextButton] = useState(false);
   const [showScoreModal, setShowScoreModal] = useState(false);
 
+  const { state, responseQuetion } = useContext(AuthContext);
+  const allQuestions = state.questions;
+
+  // useEffect(() => {
+  //   console.log(state.response);
+  // }, []);
   const validateAnswer = (selectedOption) => {
     let correct_option = allQuestions[currentQuestionIndex]["correct_option"];
     setCurrentOptionSelected(selectedOption);
@@ -43,6 +48,10 @@ const SurveyScreen = ({ navigation }) => {
       // Show Score Modal
       setShowScoreModal(true);
     } else {
+      console.log("------------------------------");
+      console.log({ response: state.response });
+      responseQuetion({ Q$A: { answer: "test" } });
+
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setCurrentOptionSelected(null);
       setCorrectOption(null);
@@ -86,27 +95,15 @@ const SurveyScreen = ({ navigation }) => {
             flexDirection: "row",
             alignItems: "flex-end",
           }}
-        >
-          <Text
-            style={{
-              color: COLORS.white,
-              fontSize: 20,
-              opacity: 0.6,
-              marginRight: 2,
-            }}
-          >
-            {currentQuestionIndex + 1}
-          </Text>
-          <Text style={{ color: COLORS.white, fontSize: 18, opacity: 0.6 }}>
-            / {allQuestions.length}
-          </Text>
-        </View>
+        ></View>
 
         {/* Question */}
         <Text
           style={{
-            color: COLORS.white,
-            fontSize: 30,
+            color: COLORS.black,
+            fontSize: 25,
+            textAlign: "center",
+            fontWeight: "bold",
           }}
         >
           {allQuestions[currentQuestionIndex]?.question}
@@ -120,7 +117,7 @@ const SurveyScreen = ({ navigation }) => {
         {allQuestions[currentQuestionIndex]?.option.map((option) => (
           <TouchableOpacity
             onPress={() => validateAnswer(option)}
-            disabled={isOptionsDisabled}
+            // disabled={isOptionsDisabled}
             key={option}
             style={{
               borderWidth: 3,
@@ -130,39 +127,30 @@ const SurveyScreen = ({ navigation }) => {
                   : COLORS.secondary + "40",
               backgroundColor:
                 option == currentOptionSelected
-                  ? COLORS.success + "20"
+                  ? COLORS.yellow
                   : COLORS.secondary + "20",
               height: 60,
               borderRadius: 20,
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
               paddingHorizontal: 20,
               marginVertical: 10,
             }}
           >
-            <Text style={{ fontSize: 20, color: COLORS.white}}>{option}</Text>
-
             {option == currentOptionSelected ? (
-              <View
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 30 / 2,
-                  backgroundColor: COLORS.success,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="check"
-                  style={{
-                    color: COLORS.white,
-                    fontSize: 20,
-                  }}
-                />
-              </View>
-            ) : null}
+              <Ionicons
+                name="radio-button-on"
+                style={[styles.radioBtn, { color: COLORS.success }]}
+              />
+            ) : (
+              <Ionicons name="radio-button-off" style={styles.radioBtn} />
+            )}
+            <Text
+              style={{ fontSize: 20, color: COLORS.black, fontWeight: "bold" }}
+            >
+              {option}
+            </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -177,7 +165,7 @@ const SurveyScreen = ({ navigation }) => {
           style={{
             marginTop: 20,
             width: "100%",
-            backgroundColor: COLORS.accent,
+            backgroundColor: COLORS.yellow,
             padding: 20,
             borderRadius: 20,
           }}
@@ -207,6 +195,7 @@ const SurveyScreen = ({ navigation }) => {
           height: 20,
           borderRadius: 20,
           backgroundColor: "#00000020",
+          marginTop: 30,
         }}
       >
         <Animated.View
@@ -214,7 +203,7 @@ const SurveyScreen = ({ navigation }) => {
             {
               height: 20,
               borderRadius: 20,
-              backgroundColor: COLORS.accent,
+              backgroundColor: COLORS.yellow,
             },
             {
               width: progressAnim,
@@ -241,14 +230,49 @@ const SurveyScreen = ({ navigation }) => {
           position: "relative",
         }}
       >
+        <View style={{ justifyContent: "center" }}>
+          <Text
+            style={{
+              color: COLORS.white,
+              textAlign: "center",
+              fontSize: 18,
+              fontWeight: "bold",
+            }}
+          >
+            Customer Satisfaction Surveyy
+          </Text>
+          <Text
+            style={{
+              color: COLORS.white,
+              textAlign: "center",
+              fontSize: 14,
+              marginHorizontal: 10,
+            }}
+          >
+            Please Fill the form dgewhjwe hjw
+          </Text>
+        </View>
         {/* ProgressBar */}
         {renderProgressBar()}
 
-        {/* Question */}
-        {renderQuestion()}
+        <View
+          style={{
+            height: SIZES.height * 0.58,
+            width: "95%",
+            marginHorizontal: 10,
+            backgroundColor: COLORS.white,
+            marginTop: 40,
+            backgroundColor: "azure",
+            borderRadius: 10,
+            paddingHorizontal: 20,
+          }}
+        >
+          {/* Question */}
+          {renderQuestion()}
 
-        {/* Options */}
-        {renderOptions()}
+          {/* {renderOptions()} */}
+          {renderOptions()}
+        </View>
 
         {/* Next Button */}
         {renderNextButton()}
@@ -280,7 +304,7 @@ const SurveyScreen = ({ navigation }) => {
                 style={{
                   fontSize: 30,
                   fontWeight: "bold",
-                  color: COLORS.success,
+                  color: COLORS.yellow,
                   textAlign: "center",
                   marginBottom: 30,
                 }}
@@ -292,7 +316,7 @@ const SurveyScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={restartSurvey}
                 style={{
-                  backgroundColor: COLORS.accent,
+                  backgroundColor: COLORS.yellow,
                   padding: 20,
                   width: "100%",
                   borderRadius: 20,
@@ -346,6 +370,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginHorizontal: 10,
   },
+  radioBtn: {
+    fontSize: 24,
+    color: "black",
+    marginRight: 10,
+  },
+  optionText: {
+    fontSize: 16,
+    textTransform: "capitalize",
+  },
+  option: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginLeft: 20,
+    marginVertical: 10,
+  },
 });
 
-export default SurveyScreen;
+export default SurveyScreenn;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,20 +8,24 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  ScrollView,
+  ActivityIndicator,
   FlatList,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constant/theme";
-import { primeServices } from "../api/primeApi";
+import { Context as AuthContext } from "../context/AppContext";
 
 const IdentificationScreen = ({ navigation }) => {
   const [showPersonalIdentification, setShowPersonalIdentification] =
     useState(true);
 
+  const { state, setSelectService, findQuetionaire } = useContext(AuthContext);
+  const primeServices = state.service;
+
   const [names, setNames] = useState("");
   const [phone, setPhone] = useState("");
   const [service, setService] = useState("");
+  const [showActivityIndictor, setActivityIndictor] = useState(false);
 
   const handleStart = () => {
     if (!names || !phone) {
@@ -30,7 +34,12 @@ const IdentificationScreen = ({ navigation }) => {
 
     setNames("");
     setPhone("");
-    navigation.navigate("Surveyy");
+
+    findQuetionaire({
+      service: state.selectedService,
+      setActivityIndictor,
+      navigation,
+    });
   };
 
   return (
@@ -100,6 +109,8 @@ const IdentificationScreen = ({ navigation }) => {
                       marginVertical: 10,
                     }}
                     onPress={() => {
+                      setSelectService({ service: item.name });
+                      // console.log({ service: item.name });
                       setService(item.name);
                     }}
                   >
@@ -221,6 +232,20 @@ const IdentificationScreen = ({ navigation }) => {
           resizeMode={"contain"}
         />
       </View>
+
+      {showActivityIndictor ? (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            left: 0,
+            height: SIZES.height * 0.35,
+          }}
+        >
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 };

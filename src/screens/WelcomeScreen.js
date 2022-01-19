@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,8 +8,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { COLORS, SIZES } from "../constant/theme";
+import { Context as AppContext } from "../context/AppContext";
 
 const WelcomeScreen = ({ navigation }) => {
+  const { state } = useContext(AppContext);
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
