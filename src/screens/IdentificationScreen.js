@@ -9,6 +9,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
   FlatList,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -41,6 +42,7 @@ const IdentificationScreen = ({ navigation }) => {
     findQuetionaire({
       service: state.selectedService,
       setActivityIndictor,
+      Alert,
       navigation,
     });
   };

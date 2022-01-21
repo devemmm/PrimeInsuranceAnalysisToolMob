@@ -37,17 +37,30 @@ const AuthReducer = (state, action) => {
 
 const fetchAvailableService =
   (dispatch) =>
-  async ({ navigation }) => {
-    try {
-      const response = await primeApi.get("/services");
+  async ({ navigation, Alert, setShowActivityIndicator }) => {
+    setShowActivityIndicator(true);
+    fetch(`${primeApi}/services`, {
+      method: "get",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        dispatch({ type: "add_service", payload: res.service });
 
-      dispatch({ type: "add_service", payload: response.data.service });
-
-      navigation.navigate("Welcome");
-    } catch (error) {
-      console.log(error.message);
-      navigation.navigate("Welcome");
-    }
+        navigation.navigate("Welcome");
+      })
+      .catch(() => {
+        setShowActivityIndicator(false);
+        Alert.alert(
+          "Sorry, something went wrong.",
+          "network error please try again",
+          [{ text: "OK", onPress: this.fetchAvailableService }]
+        );
+        navigation.navigate("Welcome");
+      });
   };
 
 const setSelectService =
@@ -57,34 +70,46 @@ const setSelectService =
 
 const findQuetionaire =
   (dispatch) =>
-  async ({ service, setActivityIndictor, navigation }) => {
-    try {
-      setActivityIndictor(true);
-      const response = await primeApi.get(`/survey/${service}`);
-      const { survey } = response.data;
+  async ({ service, setActivityIndictor, navigation, Alert }) => {
+    setActivityIndictor(true);
+    fetch(`${primeApi}/survey/${service}`, {
+      method: "get",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        const { survey } = res;
+        let quetions = [];
 
-      let quetions = [];
+        if (survey.length > 0) {
+          survey[0].questions.forEach((que) => {
+            que.option = [
+              "very satisfied",
+              "satisfied",
+              "Neither satisfied nor dissatisfied",
+              "dissatisfied",
+              "verry dissatisfied",
+            ];
+            quetions.push(que);
+          });
+        }
 
-      if (survey.length > 0) {
-        survey[0].questions.forEach((que) => {
-          que.option = [
-            "very satisfied",
-            "satisfied",
-            "Neither satisfied nor dissatisfied",
-            "dissatisfied",
-            "verry dissatisfied",
-          ];
-          quetions.push(que);
-        });
-      }
-
-      dispatch({ type: "find_questinaire", payload: quetions });
-      setActivityIndictor(false);
-      navigation.navigate("Survey");
-    } catch (error) {
-      console.log(error);
-      navigation.navigate("Welcome");
-    }
+        dispatch({ type: "find_questinaire", payload: quetions });
+        setActivityIndictor(false);
+        navigation.navigate("Survey");
+      })
+      .catch((error) => {
+        console.log(error);
+        setActivityIndictor(false);
+        Alert.alert(
+          "Sorry, something went wrong.",
+          "network error please try again",
+          [{ text: "OK", onPress: console.log("ok") }]
+        );
+      });
   };
 
 const responseQuetion =
@@ -100,17 +125,32 @@ const setUser =
 
 const submitSurvey =
   (dispatch) =>
-  async ({ survey, navigation, restartSurvey }) => {
-    try {
-      const response = await primeApi.post("/users/respond/survey", {
+  async ({ survey, Alert, setActivityIndictor, restartSurvey }) => {
+    setActivityIndictor(true);
+    fetch(`${primeApi}/users/respond/survey`, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         ...survey,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        setActivityIndictor(false);
+        console.log(res);
+        restartSurvey();
+      })
+      .catch(() => {
+        setActivityIndictor(false);
+        Alert.alert(
+          "Sorry, something went wrong.",
+          "network error please try again",
+          [{ text: "OK", onPress: console.log("ok") }]
+        );
       });
-      console.log(response.data);
-      restartSurvey();
-    } catch (error) {
-      console.log(error.response.data);
-      navigation.navigate("Survey");
-    }
   };
 
 const restoreContext = (dispatch) => () =>

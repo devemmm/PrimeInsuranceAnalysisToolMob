@@ -9,6 +9,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Modal,
+  Alert,
   Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,6 +22,7 @@ const SurveyScreenn = ({ navigation }) => {
   const [currentOptionSelected, setCurrentOptionSelected] = useState(null);
   const [correctOption, setCorrectOption] = useState(null);
   const [isOptionsDisabled, setIsOptionsDisabled] = useState(false);
+  const [disabledSubmitButton, setDisabledSubmitButton] = useState(false);
   const [score, setScore] = useState(0);
   const [showNextButton, setShowNextButton] = useState(false);
   const [showScoreModal, setShowScoreModal] = useState(false);
@@ -149,7 +151,7 @@ const SurveyScreenn = ({ navigation }) => {
               validateAnswer(option);
               setCurrentAnswer(option);
             }}
-            // disabled={isOptionsDisabled}
+            disabled={isOptionsDisabled}
             key={option}
             style={{
               borderWidth: 3,
@@ -346,7 +348,9 @@ const SurveyScreenn = ({ navigation }) => {
 
               {/* Restart Suvey*/}
               <TouchableOpacity
+                disabled={disabledSubmitButton}
                 onPress={() => {
+                  setDisabledSubmitButton(true);
                   submitSurvey({
                     survey: {
                       response: state.response,
@@ -355,6 +359,8 @@ const SurveyScreenn = ({ navigation }) => {
                       service: state.selectedService,
                     },
                     navigation,
+                    Alert,
+                    setActivityIndictor,
                     restartSurvey,
                   });
 

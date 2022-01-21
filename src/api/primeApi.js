@@ -1,5 +1,1 @@
-import axios from "react-native-axios";
-
-export default axios.create({
-  baseURL: "https://prime-insurance-api.nextreflexe.com",
-});
+export default "https://prime-insurance-api.nextreflexe.com";
