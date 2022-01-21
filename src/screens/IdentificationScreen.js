@@ -19,7 +19,8 @@ const IdentificationScreen = ({ navigation }) => {
   const [showPersonalIdentification, setShowPersonalIdentification] =
     useState(true);
 
-  const { state, setSelectService, findQuetionaire } = useContext(AuthContext);
+  const { state, setSelectService, findQuetionaire, setUser } =
+    useContext(AuthContext);
   const primeServices = state.service;
 
   const [names, setNames] = useState("");
@@ -34,6 +35,8 @@ const IdentificationScreen = ({ navigation }) => {
 
     setNames("");
     setPhone("");
+
+    setUser({ user: { name: names, phone } });
 
     findQuetionaire({
       service: state.selectedService,
@@ -240,7 +243,9 @@ const IdentificationScreen = ({ navigation }) => {
             bottom: 0,
             right: 0,
             left: 0,
-            height: SIZES.height * 0.35,
+            height: SIZES.height,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <ActivityIndicator size="large" color="#fff" />

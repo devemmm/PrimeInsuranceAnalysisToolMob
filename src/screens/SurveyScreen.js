@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
   Modal,
   Animated,
 } from "react-native";
@@ -24,12 +25,12 @@ const SurveyScreenn = ({ navigation }) => {
   const [showNextButton, setShowNextButton] = useState(false);
   const [showScoreModal, setShowScoreModal] = useState(false);
 
-  const { state, responseQuetion } = useContext(AuthContext);
+  const { state, responseQuetion, submitSurvey, restoreContext } =
+    useContext(AuthContext);
   const allQuestions = state.questions;
+  const [currentAnswer, setCurrentAnswer] = useState("");
+  const [showActivityIndictor, setActivityIndictor] = useState(false);
 
-  // useEffect(() => {
-  //   console.log(state.response);
-  // }, []);
   const validateAnswer = (selectedOption) => {
     let correct_option = allQuestions[currentQuestionIndex]["correct_option"];
     setCurrentOptionSelected(selectedOption);
@@ -42,15 +43,42 @@ const SurveyScreenn = ({ navigation }) => {
     // Show Next Button
     setShowNextButton(true);
   };
+
+  const convertAnswer = (answer) => {
+    switch (answer) {
+      case "very satisfied":
+        return 1;
+      case "satisfied":
+        return 2;
+      case "Neither satisfied nor dissatisfied":
+        return 3;
+      case "dissatisfied":
+        return 4;
+      case "verry dissatisfied":
+        return 5;
+      default:
+        return 0;
+    }
+  };
+
   const handleNext = () => {
     if (currentQuestionIndex == allQuestions.length - 1) {
       // Last Question
       // Show Score Modal
+      responseQuetion({
+        Q$A: {
+          question: allQuestions[currentQuestionIndex].question,
+          answer: convertAnswer(currentAnswer),
+        },
+      });
       setShowScoreModal(true);
     } else {
-      console.log("------------------------------");
-      console.log({ response: state.response });
-      responseQuetion({ Q$A: { answer: "test" } });
+      responseQuetion({
+        Q$A: {
+          question: allQuestions[currentQuestionIndex].question,
+          answer: convertAnswer(currentAnswer),
+        },
+      });
 
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setCurrentOptionSelected(null);
@@ -65,6 +93,7 @@ const SurveyScreenn = ({ navigation }) => {
     }).start();
   };
   const restartSurvey = () => {
+    restoreContext();
     setShowScoreModal(false);
 
     setCurrentQuestionIndex(0);
@@ -79,7 +108,7 @@ const SurveyScreenn = ({ navigation }) => {
       duration: 1000,
       useNativeDriver: false,
     }).start();
-    navigation.goBack();
+    navigation.navigate("Welcome");
   };
 
   const renderQuestion = () => {
@@ -116,7 +145,10 @@ const SurveyScreenn = ({ navigation }) => {
       <ScrollView>
         {allQuestions[currentQuestionIndex]?.option.map((option) => (
           <TouchableOpacity
-            onPress={() => validateAnswer(option)}
+            onPress={() => {
+              validateAnswer(option);
+              setCurrentAnswer(option);
+            }}
             // disabled={isOptionsDisabled}
             key={option}
             style={{
@@ -249,7 +281,7 @@ const SurveyScreenn = ({ navigation }) => {
               marginHorizontal: 10,
             }}
           >
-            Please Fill the form dgewhjwe hjw
+            Please Fill the form here to share your idea
           </Text>
         </View>
         {/* ProgressBar */}
@@ -314,7 +346,20 @@ const SurveyScreenn = ({ navigation }) => {
 
               {/* Restart Suvey*/}
               <TouchableOpacity
-                onPress={restartSurvey}
+                onPress={() => {
+                  submitSurvey({
+                    survey: {
+                      response: state.response,
+                      name: state.name,
+                      phone: state.phone,
+                      service: state.selectedService,
+                    },
+                    navigation,
+                    restartSurvey,
+                  });
+
+                  // restartSurvey();
+                }}
                 style={{
                   backgroundColor: COLORS.yellow,
                   padding: 20,
@@ -353,6 +398,22 @@ const SurveyScreenn = ({ navigation }) => {
           resizeMode={"contain"}
         />
       </View>
+
+      {showActivityIndictor ? (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+            left: 0,
+            height: SIZES.height,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator size="large" color="red" />
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 };
