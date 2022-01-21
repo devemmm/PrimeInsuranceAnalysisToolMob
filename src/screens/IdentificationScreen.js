@@ -196,6 +196,8 @@ const IdentificationScreen = ({ navigation }) => {
               keyboardType="phone-pad"
               value={phone}
               onChangeText={(phone) => setPhone(phone)}
+              returnKeyType="done"
+              onSubmitEditing={handleStart}
             />
 
             <TouchableOpacity
