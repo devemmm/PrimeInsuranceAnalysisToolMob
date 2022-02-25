@@ -37,7 +37,7 @@ const SurveyScreenn = ({ navigation }) => {
     let correct_option = allQuestions[currentQuestionIndex]["correct_option"];
     setCurrentOptionSelected(selectedOption);
     setCorrectOption(correct_option);
-    setIsOptionsDisabled(true);
+    setIsOptionsDisabled(false);
     if (selectedOption == correct_option) {
       // Set Score
       setScore(score + 1);

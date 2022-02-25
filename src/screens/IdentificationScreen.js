@@ -34,10 +34,14 @@ const IdentificationScreen = ({ navigation }) => {
       return;
     }
 
+    if (phone.length < 9) {
+      return;
+    }
+
     setNames("");
     setPhone("");
 
-    setUser({ user: { name: names, phone } });
+    setUser({ user: { name: names, phone: `+250${phone}` } });
 
     findQuetionaire({
       service: state.selectedService,
@@ -188,17 +192,30 @@ const IdentificationScreen = ({ navigation }) => {
               onChangeText={(names) => setNames(names)}
             />
 
-            <TextInput
-              placeholder="Phone number"
-              placeholderTextColor={COLORS.yellow}
-              style={styles.textField}
-              autoCapitalize="none"
-              keyboardType="phone-pad"
-              value={phone}
-              onChangeText={(phone) => setPhone(phone)}
-              returnKeyType="done"
-              onSubmitEditing={handleStart}
-            />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Text style={[styles.textField, { color: COLORS.yellow }]}>
+                (+250)
+              </Text>
+              <TextInput
+                placeholder="Phone number"
+                placeholderTextColor={COLORS.yellow}
+                style={styles.textField}
+                autoComplete={false}
+                autoCapitalize="none"
+                keyboardType="phone-pad"
+                value={phone}
+                maxLength={9}
+                onChangeText={(phone) => setPhone(phone)}
+                returnKeyType="done"
+                onSubmitEditing={handleStart}
+              />
+            </View>
 
             <TouchableOpacity
               onPress={handleStart}
