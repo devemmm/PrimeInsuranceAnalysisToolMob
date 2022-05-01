@@ -11,10 +11,11 @@ import {
   Modal,
   Alert,
   Animated,
+  SectionBase,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../constant/theme";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { Context as AuthContext } from "../context/AppContext";
 
 const SurveyScreenn = ({ navigation }) => {
@@ -26,6 +27,9 @@ const SurveyScreenn = ({ navigation }) => {
   const [score, setScore] = useState(0);
   const [showNextButton, setShowNextButton] = useState(false);
   const [showScoreModal, setShowScoreModal] = useState(false);
+  const [commentSection, setCommentSection] = useState(true);
+  const [comment, setComment] = useState("");
+  const [error, setError] = useState(false);
 
   const { state, responseQuetion, submitSurvey, restoreContext } =
     useContext(AuthContext);
@@ -317,59 +321,40 @@ const SurveyScreenn = ({ navigation }) => {
           transparent={true}
           visible={showScoreModal}
         >
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: COLORS.primary,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          {commentSection ? (
             <View
               style={{
-                backgroundColor: COLORS.white,
-                width: "90%",
-                borderRadius: 20,
-                padding: 20,
+                flex: 1,
+                backgroundColor: COLORS.primary,
                 alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 30,
-                  fontWeight: "bold",
-                  color: COLORS.yellow,
-                  textAlign: "center",
-                  marginBottom: 30,
+              <TextInput
+                placeholder="Comment"
+                autoCapitalize="none"
+                style={[
+                  styles.textArea,
+                  { borderColor: error ? "red" : "#fff" },
+                ]}
+                value={comment}
+                onChangeText={(value) => {
+                  setError(false);
+                  setComment(value);
                 }}
-              >
-                Thank you for your Time!!
-              </Text>
-
-              {/* Restart Suvey*/}
+              />
               <TouchableOpacity
-                disabled={disabledSubmitButton}
                 onPress={() => {
-                  setDisabledSubmitButton(true);
-                  submitSurvey({
-                    survey: {
-                      response: state.response,
-                      name: state.name,
-                      phone: state.phone,
-                      service: state.selectedService,
-                    },
-                    navigation,
-                    Alert,
-                    setActivityIndictor,
-                    restartSurvey,
-                  });
-
-                  // restartSurvey();
+                  if (comment.length < 1) {
+                    setError(true);
+                  } else {
+                    setCommentSection(false);
+                  }
                 }}
                 style={{
                   backgroundColor: COLORS.yellow,
                   padding: 20,
-                  width: "100%",
+                  width: "80%",
                   borderRadius: 20,
                 }}
               >
@@ -381,11 +366,81 @@ const SurveyScreenn = ({ navigation }) => {
                     fontWeight: "bold",
                   }}
                 >
-                  Submit Survey
+                  Send
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: COLORS.primary,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: COLORS.white,
+                  width: "90%",
+                  borderRadius: 20,
+                  padding: 20,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 30,
+                    fontWeight: "bold",
+                    color: COLORS.yellow,
+                    textAlign: "center",
+                    marginBottom: 30,
+                  }}
+                >
+                  Thank you for your Time!!
+                </Text>
+
+                {/* Restart Suvey*/}
+                <TouchableOpacity
+                  disabled={disabledSubmitButton}
+                  onPress={() => {
+                    setDisabledSubmitButton(true);
+                    submitSurvey({
+                      survey: {
+                        response: state.response,
+                        name: state.name,
+                        phone: state.phone,
+                        service: state.selectedService,
+                      },
+                      navigation,
+                      Alert,
+                      setActivityIndictor,
+                      restartSurvey,
+                    });
+
+                    // restartSurvey();
+                  }}
+                  style={{
+                    backgroundColor: COLORS.yellow,
+                    padding: 20,
+                    width: "100%",
+                    borderRadius: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: COLORS.white,
+                      fontSize: 20,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Submit Survey
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </Modal>
 
         {/* Background Image */}
@@ -452,6 +507,18 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     marginLeft: 20,
     marginVertical: 10,
+  },
+  textArea: {
+    height: 100,
+    backgroundColor: "#fff",
+    width: "80%",
+    borderRadius: 10,
+    marginBottom: 40,
+    textAlign: "center",
+    fontSize: 18,
+    color: "grey",
+    fontWeight: "bold",
+    borderWidth: 2,
   },
 });
 
