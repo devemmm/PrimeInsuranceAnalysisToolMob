@@ -411,6 +411,7 @@ const SurveyScreenn = ({ navigation }) => {
                         name: state.name,
                         phone: state.phone,
                         service: state.selectedService,
+                        comment,
                       },
                       navigation,
                       Alert,
